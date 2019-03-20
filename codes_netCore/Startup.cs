@@ -43,7 +43,7 @@ namespace codes_netCore
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Countries}/{action=Main}/{id?}");
             });
         }
     }

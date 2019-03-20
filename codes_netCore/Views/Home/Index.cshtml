@@ -1,8 +1,14 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+﻿<div class="row">
+    <div class="col-lg-6 col-md-9 col-sm-12">
+        <div> @await Html.PartialAsync("/Views/Countries/Create.cshtml") </div>
+        <div> @await Html.PartialAsync("/Views/Colors/Create.cshtml") </div>
+        <div> @await Html.PartialAsync("/Views/Networks/Create.cshtml") </div>
+        <div>
+            @Html.ActionLink("Back to List", "Main", "Countries")
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-9 col-sm-12">
+        @await Html.PartialAsync("/Views/Countries/ExportCodes.cshtml")
+        @await Html.PartialAsync("/Views/Countries/RegExp.cshtml")
+    </div>
 </div>

@@ -18,17 +18,11 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Countries" asp-action="Index">codes_netCore</a>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
+    <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
+        <div id="CodesList" class="form-group" />
     </div>
 
     <environment include="Development">
@@ -49,7 +43,7 @@
                 integrity="sha256-E/V4cWE4qvAeO5MOhjtGtqDzPndRO1LBk8lJ/PR7CA4=">
         </script>
     </environment>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/bundle.js" asp-append-version="true"></script>
 
     @RenderSection("Scripts", required: false)
 </body>

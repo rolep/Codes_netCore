@@ -1,0 +1,13 @@
+﻿@using (Html.BeginForm("ExportCodes", "Countries", FormMethod.Post))
+{
+    <div class="form-horizontal">
+        <h4>Export codes to .xlsx</h4>
+        <hr />
+        <div class="form-group">
+            @await Html.PartialAsync("/Views/Countries/CountryDropDown.cshtml")
+        </div>
+        <div class="form-group">
+            <button class="btn btn-success" type="submit">Export</button>
+        </div>
+    </div>
+}
