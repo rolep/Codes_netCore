@@ -1,47 +1,21 @@
 ﻿@model IEnumerable<codes_netCore.Models.Network>
 
-@{
-    ViewData["Title"] = "Index";
-}
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-center">
+        <ul class="list-group">
+            @Html.Hidden("HexSaver", "0")
+            @Html.Hidden("NetworkIdSaver", "0")
+            <li class="list-group-item">@Html.ActionLink("Create New", "Create")</li>
+            @foreach (var item in Model)
+            {
+                <li onclick="NetworkSelected(this)"
+                    class="list-group-item"
+                    style="background-color:@item.Color.Hex"
+                    id="@item.Id">
+                    @item.Name
+                </li>
+            }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Color)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Country)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Color.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Country.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        </ul>
+    </div>
+</div>

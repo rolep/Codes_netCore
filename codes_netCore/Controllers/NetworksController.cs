@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using codes_netCore.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace codes_netCore.Controllers
 {
@@ -19,33 +20,13 @@ namespace codes_netCore.Controllers
         }
 
         // GET: Networks
-        public async Task<IActionResult> Index()
+        public IActionResult Index(int? id)
         {
-            var modelContext = _context.Networks.Include(n => n.Color).Include(n => n.Country);
-            return View(await modelContext.ToListAsync());
+            if (id == null) return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            var modelContext = _context.Countries.Find(id).Networks;
+            return PartialView(modelContext.ToList());
         }
-
-        // GET: Networks/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var network = await _context.Networks
-                .Include(n => n.Color)
-                .Include(n => n.Country)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (network == null)
-            {
-                return NotFound();
-            }
-
-            return View(network);
-        }
-
-        // GET: Networks/Create
+        
         public IActionResult Create()
         {
             ViewData["ColorId"] = new SelectList(_context.Colors, "Id", "Id");
@@ -53,11 +34,7 @@ namespace codes_netCore.Controllers
             return View();
         }
 
-        // POST: Networks/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,CountryId,ColorId,Name")] Network network)
         {
             if (ModelState.IsValid)
