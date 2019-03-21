@@ -1,31 +1,33 @@
 ﻿@model codes_netCore.Models.Network
 
-<h4>Network</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="CountryId" class="control-label">Country</label>
-                <select asp-for="CountryId" class ="form-control" asp-items="ViewBag.CountryId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="ColorId" class="control-label">Color HEX</label>
-                <select asp-for="ColorId" class ="form-control" asp-items="ViewBag.ColorId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+@using (Html.BeginForm("Create", "Networks", FormMethod.Post, new { id = "form_network" }))
+{
+    <h4>Network</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="CountryId" class="control-label">Country</label>
+                    <select asp-for="CountryId" class="form-control" asp-items="ViewBag.CountryId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ColorId" class="control-label">Color HEX</label>
+                    <select asp-for="ColorId" class="form-control" asp-items="ViewBag.ColorId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <button onclick="CreateNew('/Networks/Create/','#form_network')" class="btn btn-success" type="button">Create</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
+}
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

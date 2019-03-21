@@ -22,16 +22,16 @@ namespace codes_netCore.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            return PartialView();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,Hex")] Color color)
+        public IActionResult Create([Bind("Id,Hex")] Color color)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(color);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return new StatusCodeResult(StatusCodes.Status200OK);
             }
             return new StatusCodeResult(StatusCodes.Status400BadRequest);
