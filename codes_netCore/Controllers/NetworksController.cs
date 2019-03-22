@@ -16,7 +16,7 @@ namespace codes_netCore.Controllers
             _context = context;
         }
 
-        public ActionResult NetworkDropDown(int? countryId)
+        public IActionResult NetworkDropDown(int? countryId)
         {
             if (countryId == null) return new StatusCodeResult(StatusCodes.Status400BadRequest);
 
@@ -34,8 +34,8 @@ namespace codes_netCore.Controllers
 
         public IActionResult Create()
         {
-            ViewData["ColorId"] = new SelectList(_context.Colors, "Id", "Id");
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Id");
+            ViewBag.ColorId = new SelectList(_context.Colors, "Id", "Hex");
+            ViewBag.CountryId = new SelectList(_context.Countries, "Id", "Name");
             return PartialView();
         }
 

@@ -16,9 +16,9 @@ namespace codes_netCore.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Colors.ToListAsync());
+            return View(_context.Colors.ToList());
         }
 
         public IActionResult Create()
