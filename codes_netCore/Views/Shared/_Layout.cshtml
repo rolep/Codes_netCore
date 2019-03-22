@@ -13,7 +13,7 @@
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
               crossorigin="anonymous"
-              integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE="/>
+              integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" />
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
@@ -21,6 +21,11 @@
     <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()
+                    <div class="form-group">
+            <div class="col-md-offset-2">
+                <input id="Logs" type="text" readonly="readonly" class="form-control  form-control-sm" placeholder="Logs">
+            </div>
+        </div>
         </main>
         <div id="CodesList" class="form-group" />
     </div>

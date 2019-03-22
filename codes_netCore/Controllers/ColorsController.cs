@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace codes_netCore.Controllers
@@ -30,9 +31,13 @@ namespace codes_netCore.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(color);
-                _context.SaveChanges();
-                return new StatusCodeResult(StatusCodes.Status200OK);
+                if (_context.Colors.Where(c => c.Hex == color.Hex).FirstOrDefault() == null)
+                {
+                    _context.Add(color);
+                    _context.SaveChanges();
+                    return new StatusCodeResult(StatusCodes.Status200OK);
+                }
+                return new StatusCodeResult(StatusCodes.Status409Conflict);
             }
             return new StatusCodeResult(StatusCodes.Status400BadRequest);
         }

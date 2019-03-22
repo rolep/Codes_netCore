@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace codes_netCore.Controllers
@@ -56,207 +57,110 @@ namespace codes_netCore.Controllers
 
             Country country = _context.Countries.Find(countryId);
             ICollection<Code> countryCodes = country.Codes;
-            // paint cells with roots colors
-            if (R.Length > 1)
+            if (countryCodes.Count > 0)
             {
-                foreach (var ABrow in UIcodesTable)
+                // paint cells with roots colors
+                if (R.Length > 1)
                 {
-                    IEnumerable<Code> rootCodes = null;
-                    string RAB;
-                    for (int i = 1; i < R.Length; i++)
+                    foreach (var ABrow in UIcodesTable)
                     {
-                        RAB = R + ABrow.AB;
-                        if (i > 1)
+                        IEnumerable<Code> rootCodes = null;
+                        string RAB;
+                        for (int i = 1; i < R.Length; i++)
                         {
-                            RAB = RAB.Remove(RAB.Length - i + 1);
-                        }
-                        RAB = RAB.Substring(RAB.Length - 3);
-                        rootCodes = countryCodes.Where(code => code.R == R.Remove(R.Length - i) && code.Value.Equals(RAB));
-                        if (rootCodes.Count() > 0)
-                            break;
-                    }
-
-                    if (rootCodes.Count() > 0)
-                        foreach (var rootCode in rootCodes)
-                        {
-                            char lastDigit = rootCode.Value[rootCode.Value.Length - 1] == ' ' ?
-                                                    rootCode.Value[rootCode.Value.Length - 2] :
-                                                     rootCode.Value[rootCode.Value.Length - 1];
-                            for (int i = 0; i < 10; ++i)
+                            RAB = R + ABrow.AB;
+                            if (i > 1)
                             {
-                                if (lastDigit == i.ToString()[0])
+                                RAB = RAB.Remove(RAB.Length - i + 1);
+                            }
+                            RAB = RAB.Substring(RAB.Length - 3);
+                            rootCodes = countryCodes.Where(code => code.R == R.Remove(R.Length - i) && code.Value.Equals(RAB));
+                            if (rootCodes.Count() > 0)
+                                break;
+                        }
+
+                        if (rootCodes.Count() > 0)
+                            foreach (var rootCode in rootCodes)
+                            {
+                                char lastDigit = rootCode.Value[rootCode.Value.Length - 1] == ' ' ?
+                                                        rootCode.Value[rootCode.Value.Length - 2] :
+                                                         rootCode.Value[rootCode.Value.Length - 1];
+                                for (int i = 0; i < 10; ++i)
                                 {
-                                    for (int k = 0; k < 10; k++)
+                                    if (lastDigit == i.ToString()[0])
                                     {
-                                        ABrow.codes[k].colorHEX = rootCode.Network.Color.Hex;
-                                        ABrow.codes[k].id = -rootCode.Id;
+                                        for (int k = 0; k < 10; k++)
+                                        {
+                                            ABrow.codes[k].colorHEX = rootCode.Network.Color.Hex;
+                                            ABrow.codes[k].id = -rootCode.Id;
+                                        }
                                     }
+                                    continue;
                                 }
-                                continue;
+                            }
+                    }
+                }
+
+                // fill table with codes
+                IEnumerable<Code> codesOfR = countryCodes.Where(code => code.R == R);
+                if (codesOfR.Count() > 0)
+                {
+                    foreach (var ABrow in UIcodesTable)
+                    {
+                        foreach (var cell in ABrow.codes)
+                        {
+                            Code code = codesOfR.FirstOrDefault(_code => _code.Value == cell.code);
+                            if (code != null)
+                            {
+                                cell.colorHEX = code.Network.Color.Hex;
+                                cell.id = code.Id;
                             }
                         }
+                    }
                 }
-            }
 
-            // fill table with codes
-            IEnumerable<Code> codesOfR = countryCodes.Where(code => code.R == R);
-            if (codesOfR.Count() > 0)
-            {
+                // paint cells with inherited codes colors
+                IEnumerable<Code> inheritedCodes = null;
+
                 foreach (var ABrow in UIcodesTable)
                 {
                     foreach (var cell in ABrow.codes)
                     {
-                        Code code = codesOfR.FirstOrDefault(_code => _code.Value == cell.code);
-                        if (code != null)
+                        inheritedCodes = countryCodes.Where(code => $"{code.R}{code.Value}".StartsWith(R + cell.code));
+                        if (inheritedCodes.Count() == 0) continue;
+                        string colorHEX = null;
+                        foreach (var code in inheritedCodes)
                         {
-                            cell.colorHEX = code.Network.Color.Hex;
-                            cell.id = code.Id;
+                            if (cell.colorHEX == "#FFFFFF")
+                            {
+                                colorHEX = greyColorHEX;
+                                break;
+                            }
+                            if (colorHEX == null)
+                                colorHEX = code.Network.Color.Hex;
+                            else if (colorHEX != code.Network.Color.Hex)
+                            {
+                                colorHEX = greyColorHEX;
+                                break;
+                            }
                         }
+                        cell.colorHEX = colorHEX;
                     }
                 }
             }
-
-            // paint cells with inherited codes colors
-            IEnumerable<Code> inheritedCodes = null;
-
-            foreach (var ABrow in UIcodesTable)
-            {
-                foreach (var cell in ABrow.codes)
-                {
-                    inheritedCodes = countryCodes.Where(code => $"{code.R}{code.Value}".StartsWith(R + cell.code));
-                    if (inheritedCodes.Count() == 0) continue;
-                    string colorHEX = null;
-                    foreach (var code in inheritedCodes)
-                    {
-                        if (cell.colorHEX == "#FFFFFF")
-                        {
-                            colorHEX = greyColorHEX;
-                            break;
-                        }
-                        if (colorHEX == null)
-                            colorHEX = code.Network.Color.Hex;
-                        else if (colorHEX != code.Network.Color.Hex)
-                        {
-                            colorHEX = greyColorHEX;
-                            break;
-                        }
-                    }
-                    cell.colorHEX = colorHEX;
-                }
-            }
-
             return PartialView(UIcodesTable);
         }
 
-        public async Task<IActionResult> Index()
+        public ActionResult CodesList(int countryId)
         {
-            return View(await _context.Countries.ToListAsync());
-        }
-
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
+            Country country = _context.Countries.Find(countryId);
+            if (country == null) return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            List<Code> codes = new List<Code>();
+            foreach (var code in country.Codes.ToList())
             {
-                return NotFound();
+                codes.Add(new Code() { Value = $"{code.Country.Code}{code.R}{code.Value}" });
             }
-
-            var country = await _context.Countries
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (country == null)
-            {
-                return NotFound();
-            }
-
-            return View(country);
-        }
-
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,Name,Code")] Country country)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(country);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(country);
-        }
-
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var country = await _context.Countries.FindAsync(id);
-            if (country == null)
-            {
-                return NotFound();
-            }
-            return View(country);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Code")] Country country)
-        {
-            if (id != country.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(country);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CountryExists(country.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(country);
-        }
-
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var country = await _context.Countries
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (country == null)
-            {
-                return NotFound();
-            }
-
-            return View(country);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var country = await _context.Countries.FindAsync(id);
-            _context.Countries.Remove(country);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return PartialView(codes);
         }
 
         [HttpGet]
@@ -270,6 +174,28 @@ namespace codes_netCore.Controllers
             ViewBag.CountryId = new SelectList(countries, "Id", "Name");
 
             return PartialView();
+        }
+
+        [HttpGet]
+        public ActionResult RegExp()
+        {
+            return PartialView();
+        }
+
+        [HttpPost]
+        public ActionResult RegExp(int? id)
+        {
+            var codes = _context.Networks.Find(id)?.Codes;
+            if (codes == null) return new StatusCodeResult(StatusCodes.Status404NotFound);
+            string codeRegExp = $"^{codes.First().Country.Code}(";
+            foreach (var item in codes)
+            {
+                codeRegExp += $"{item.R}{item.Value}" + "|";
+            }
+            codeRegExp = codeRegExp.TrimEnd('|');
+            codeRegExp += ").*";
+
+            return File(Encoding.UTF8.GetBytes(codeRegExp), "text/plain", $"{codes.First().Country.Name.Trim()} {codes.First().Network.Name.Trim()}.txt");
         }
 
         [HttpPost]
@@ -305,6 +231,27 @@ namespace codes_netCore.Controllers
             return File(new MemoryStream(excel.GetAsByteArray()), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName + ".xlsx");
         }
 
+        public IActionResult Create()
+        {
+            return PartialView();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([Bind("Id,Name,Code")] Country country)
+        {
+            if (ModelState.IsValid)
+            {
+                if (_context.Countries.Where(c => c.Name == country.Name).FirstOrDefault() == null)
+                {
+                    _context.Add(country);
+                    await _context.SaveChangesAsync();
+                    return new StatusCodeResult(StatusCodes.Status200OK);
+                }
+                return new StatusCodeResult(StatusCodes.Status400BadRequest);
+            }
+            return new StatusCodeResult(StatusCodes.Status400BadRequest);
+        }
+        
         private bool CountryExists(int id)
         {
             return _context.Countries.Any(e => e.Id == id);
