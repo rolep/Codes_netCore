@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace codes_netCore.Models
 {
@@ -16,7 +18,16 @@ namespace codes_netCore.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=codes;Username=postgres;Password=qq");
+            optionsBuilder.UseNpgsql(ConnectionString());
+        }
+
+        string ConnectionString()
+        {
+            var builder = new ConfigurationBuilder();
+            builder.SetBasePath(Directory.GetCurrentDirectory());
+            builder.AddJsonFile("appsettings.json");
+            var config = builder.Build();
+            return config.GetConnectionString("Default");
         }
     }
 }
