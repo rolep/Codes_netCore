@@ -4,7 +4,7 @@ version: '2.1'
 services:
 
   codes:
-    image: otrscodes
+    image: otrscodes_app
     build:
       context: .
     restart: always
@@ -25,11 +25,13 @@ services:
       - codes_db:/var/lib/postgresql/data/pgdata
 
   nginx:
-    image: otrscodes-nginx
+    image: otrscodes_nginx
     build:
       context: .
       dockerfile: Dockerfile.nginx
     restart: always
+    depends_on:
+      - codes
     ports:
       - "8080:80"
 

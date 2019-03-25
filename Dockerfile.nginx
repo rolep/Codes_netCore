@@ -1,4 +1,4 @@
-FROM otrscodes AS app
+FROM otrscodes_app AS app
 
 FROM nginx
 WORKDIR /usr/share/nginx/html

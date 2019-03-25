@@ -4,7 +4,7 @@ version: '2.1'
 services:
 
   codes:
-    image: otrscodes
+    image: otrscodes_app
     build:
       context: .
     restart: always
@@ -32,7 +32,7 @@ services:
       - codes_db:/var/lib/postgresql/data/pgdata
 
   nginx:
-    image: otrscodes-nginx
+    image: otrscodes_nginx
     build:
       context: .
       dockerfile: Dockerfile.nginx
@@ -40,6 +40,8 @@ services:
     networks:
       - codesnet
       - web
+    depends_on:
+      - codes
     labels:
       - "traefik.backend=codes"
       - "traefik.frontend.rule=Host:codes.sfinx.mcore.solutions"
