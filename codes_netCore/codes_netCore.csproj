@@ -35,4 +35,11 @@
     <None Include="bundleconfig.json" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Content Update="wwwroot\biohazard.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

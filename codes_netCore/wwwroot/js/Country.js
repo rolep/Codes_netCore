@@ -15,7 +15,7 @@
 });
 
 function RegionChanged(e) {
-    //$('#loader').show();
+    $('#loader').show();
     $.ajax({
         url: "/Countries/CodesTable",
         type: "GET",
@@ -26,11 +26,11 @@ function RegionChanged(e) {
         success: function (response) {
             UpdateTable(response);
             UpdateList();
-            //$('#loader').hide();
+            $('#loader').hide();
         },
         error: function (status) {
             document.getElementById("Logs").value = status.statusText;
-            //$('#loader').hide();
+            $('#loader').hide();
         }
     });
 }

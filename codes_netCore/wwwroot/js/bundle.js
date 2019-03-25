@@ -1,18 +1,18 @@
 // Admin page Create actions
 function CreateNew(path, id) {
-    //$('#loader').show();
+    $('#loader').show();
     $.ajax({
         url: path,
         type: 'POST',
         data: $(id).serialize(),
         success: function () {
             $(id)[0].reset();
-            //document.getElementById("Logs").value = "200 OK";
-            //$('#loader').hide();
+            document.getElementById("Logs").value = "200 OK";
+            $('#loader').hide();
         },
         error: function (status) {
-            //document.getElementById("Logs").value = status.statusText;
-            //$('#loader').hide();
+            document.getElementById("Logs").value = status.statusText;
+            $('#loader').hide();
         }
     });
 }
@@ -138,14 +138,11 @@ $('body').on('contextmenu', 'tbody th', function () {
 
     if (codesIDs.length === 0) {
         document.getElementById("Logs").value = "Client: nothing to delete";
-        return;
-    }
-    DeleteCodes(codesIDs, cells);
+    } else
+        DeleteCodes(codesIDs, cells);
 });
 
 function DeleteCodes(codesIDs, cells) {
-    var isTableSelected = cntrlIsPressed;
-
     $('#loader').show();
     $.ajax({
         url: "/Codes/Delete",
@@ -154,12 +151,7 @@ function DeleteCodes(codesIDs, cells) {
             ids: codesIDs
         },
         success: function () {
-            if (isTableSelected) {
-                DeleteAllTableCodes_OnSuccess(cells);
-            } else {
-                DeleteArray_OnSuccess(cells);
-            }
-            //RegionChanged($("#regionChange").val());
+            $(cells).css('background-color', '#FFFFFF');
             document.getElementById("Logs").value = "200 OK";
             $('#loader').hide();
         },
@@ -168,14 +160,6 @@ function DeleteCodes(codesIDs, cells) {
             $('#loader').hide();
         }
     });
-}
-
-function DeleteArray_OnSuccess(cells) {
-    $(cells).css('background-color', '#FFFFFF');
-}
-
-function DeleteAllTableCodes_OnSuccess(cells) {
-    $(cells).css('background-color', '#FFFFFF');
 }
 
 function DeleteInheritedCode(rootId, code) {
@@ -270,7 +254,7 @@ function SendCodesOnServer(codes, cells) {
             if (isTableSelected) {
                 AddedAllTableCodes_OnSuccess(cells);
             } else {
-                AddedArray_OnSuccess(cells);
+                $(cells).css('background-color', document.getElementById("HexSaver").value);
             }
             RegionChanged($("#regionChange").val());
             document.getElementById("Logs").value = "200 OK";
@@ -288,12 +272,6 @@ function AddedAllTableCodes_OnSuccess(cells) {
         for (var j = 2; j < 12; ++j) {
             $(cells[i].cells[j]).css('background-color', document.getElementById("HexSaver").value);
         }
-    }
-}
-
-function AddedArray_OnSuccess(cells) {
-    for (var i = 0; i <= cells.length; ++i) {
-        $(cells).css('background-color', document.getElementById("HexSaver").value);
     }
 }
 
@@ -322,7 +300,7 @@ $("#ddlCountries").change(function () {
 });
 
 function RegionChanged(e) {
-    //$('#loader').show();
+    $('#loader').show();
     $.ajax({
         url: "/Countries/CodesTable",
         type: "GET",
@@ -333,11 +311,11 @@ function RegionChanged(e) {
         success: function (response) {
             UpdateTable(response);
             UpdateList();
-            //$('#loader').hide();
+            $('#loader').hide();
         },
         error: function (status) {
             document.getElementById("Logs").value = status.statusText;
-            //$('#loader').hide();
+            $('#loader').hide();
         }
     });
 }
