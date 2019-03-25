@@ -1,0 +1,5 @@
+FROM otrscodes_app AS app
+
+FROM nginx
+COPY --from=app /app/wwwroot /usr/share/nginx/html
+COPY nginx /etc/nginx/

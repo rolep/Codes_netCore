@@ -1,0 +1,62 @@
+---
+version: '2.1'
+
+services:
+
+  codes:
+    image: otrscodes_app
+    build:
+      context: .
+    restart: always
+    environment:
+      - ConnectionStrings__Default="Host=db;Database=${POSTGRES_DB:-codes};Username=${POSTGRES_USER:-codes};Password=${POSTGRES_PASSWORD:-password}"
+    networks:
+      - codesnet
+    depends_on:
+      - db
+    mem_limit: 350m
+    cpu_period: 100000
+    cpu_quota: 50000
+
+  db:
+    image: postgres:10.5-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-codes}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_INITDB_ARGS="--auth=trust"
+    networks:
+      - codesnet
+    volumes:
+      - codes_db:/var/lib/postgresql/data/pgdata
+
+  nginx:
+    image: otrscodes_nginx
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    restart: always
+    networks:
+      - codesnet
+      - web
+    depends_on:
+      - codes
+    labels:
+      - "traefik.backend=codes"
+      - "traefik.frontend.rule=Host:codes.sfinx.mcore.solutions"
+      - "traefik.enable=true"
+      - "traefik.port=80"
+      - "traefik.frontend.passHostHeader=true"
+      - "traefik.frontend.whitelistSourceRange=188.230.126.178/32,194.28.164.0/22,193.104.107.0/24,81.17.136.16/28,46.151.193.98/32,85.187.112.85/32"
+      - "traefik.frontend.headers.forceSTSHeader=true"
+      - "traefik.frontend.headers.STSSeconds=315360000"
+      - "traefik.frontend.headers.SSLRedirect=true"
+
+volumes:
+  codes_db:
+networks:
+  codesnet:
+  web:
+    external: true
+...
