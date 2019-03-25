@@ -1,15 +1,15 @@
 ﻿@model IEnumerable<codes_netCore.Models.BaseTable>
 
 <div class="row">
-    <div class="col-lg-6 col-md-9 col-sm-12">
-        <table id="tb1" class="table table-condensed table-bordered text-center">
+    <div class="col-lg-6 col-sm-12">
+        <table id="tb1" class="table table-bordered text-center">
             <thead>
                 <tr>
-                    <th scope="col">R</th>
-                    <th scope="col" width="50">AB / C</th>
+                    <th class="cellPadding">R</th>
+                    <th width="50">AB / C</th>
                     @for (int i = 0; i < 10; ++i)
                     {
-                        <th scope="col">@i</th>
+                        <th>@i</th>
                     }
                 </tr>
             </thead>
@@ -17,8 +17,8 @@
                 @for (int i = 0; i < 50; ++i)
                 {
                     <tr>
-                        <th id="RValue" scope="row">@Model.ElementAt(i).R</th>
-                        <th scope="row">@Model.ElementAt(i).AB</th>
+                        <th class="cellPadding" id="RValue">@Model.ElementAt(i).R</th>
+                        <th>@Model.ElementAt(i).AB</th>
                         @for (int j = 0; j < 10; ++j)
                         {
                             <td id="@Model.ElementAt(i).codes[j].id" style="background-color:@Model.ElementAt(i).codes[j].colorHEX">@Model.ElementAt(i).codes[j].code</td>
@@ -28,15 +28,15 @@
             </tbody>
         </table>
     </div>
-    <div class="col-lg-6 col-md-9 col-sm-12">
-        <table id="tb2" class="table  table-condensed table-bordered text-center">
+    <div class="col-lg-6 col-sm-12">
+        <table id="tb2" class="table table-bordered text-center">
             <thead>
                 <tr>
-                    <th scope="col">R</th>
-                    <th scope="col" width="50">AB / C</th>
+                    <th class="cellPadding">R</th>
+                    <th width="50">AB / C</th>
                     @for (int i = 0; i < 10; ++i)
                     {
-                        <th scope="col">@i</th>
+                        <th>@i</th>
                     }
                 </tr>
             </thead>
@@ -44,8 +44,8 @@
                 @for (int i = 50; i < 100; i++)
                 {
                     <tr>
-                        <th scope="row">@Model.ElementAt(i).R</th>
-                        <th scope="row">@Model.ElementAt(i).AB</th>
+                        <th class="cellPadding">@Model.ElementAt(i).R</th>
+                        <th>@Model.ElementAt(i).AB</th>
                         @for (int j = 0; j < 10; ++j)
                         {
                             <td id="@Model.ElementAt(i).codes[j].id" style="background-color:@Model.ElementAt(i).codes[j].colorHEX">@Model.ElementAt(i).codes[j].code</td>
