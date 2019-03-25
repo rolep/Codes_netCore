@@ -17,7 +17,7 @@ services:
     image: postgres:10.5-alpine
     restart: always
     environment:
-      - POSTGRES_USER=${PSOTGRES_USER:-codes}
+      - POSTGRES_USER=${POSTGRES_USER:-codes}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
       - PGDATA=/var/lib/postgresql/data/pgdata
       - POSTGRES_INITDB_ARGS="--auth=trust"

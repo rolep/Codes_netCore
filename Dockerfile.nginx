@@ -1,6 +1,6 @@
 FROM otrscodes AS app
 
 FROM nginx
-WORKDIR /app
+WORKDIR /usr/share/nginx/html
 COPY --from=app /app/wwwroot /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
