@@ -1,0 +1,38 @@
+---
+version: '2.1'
+
+services:
+
+  codes:
+    image: otrscodes
+    build:
+      context: .
+    restart: always
+    environment:
+      - ConnectionStrings__Default="Host=db;Database=${POSTGRES_DB:-codes};Username=${POSTGRES_USER:-codes};Password=${POSTGRES_PASSWORD:-password}"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:10.5-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=${PSOTGRES_USER:-codes}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_INITDB_ARGS="--auth=trust"
+    volumes:
+      - codes_db:/var/lib/postgresql/data/pgdata
+
+  nginx:
+    image: otrscodes-nginx
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    restart: always
+    ports:
+      - "8080:80"
+
+volumes:
+  codes_db:
+...
