@@ -27,7 +27,10 @@ services:
       - PGDATA=/var/lib/postgresql/data/pgdata
       - POSTGRES_INITDB_ARGS="--auth=trust"
     networks:
-      - codesnet
+      codesnet:
+      dbs:
+        aliases:
+          - codes-db
     volumes:
       - codes_db:/var/lib/postgresql/data/pgdata
     ports:
@@ -60,5 +63,7 @@ volumes:
 networks:
   codesnet:
   web:
+    external: true
+  dbs:
     external: true
 ...
